@@ -1,0 +1,37 @@
+<!-- callback.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth Callback</title>
+</head>
+<body>
+    <h1>Authorization Code Received</h1>
+    <p id="message">Waiting for authorization code...</p>
+    
+    <script>
+        // Parse the URL to get the authorization code
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get('code');
+        
+        if (authCode) {
+            document.getElementById('message').textContent = `Authorization Code: ${authCode}`;
+            
+            // Optionally: send the code to your local server
+            fetch('http://localhost:8000/store-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: authCode })
+            }).then(response => {
+                console.log('Code sent to local server');
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        } else {
+            document.getElementById('message').textContent = "No authorization code found.";
+        }
+    </script>
+</body>
+</html>
